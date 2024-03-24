@@ -74,3 +74,10 @@ jobs:
       - run:
           name: Clean previous images and containers
           command: docker system prune -f
+
+workflows:
+  deploy-to-ec2:
+    jobs:
+      - integration
+      - build-and-push-ecr-image
+      - Continuous-Deployment
