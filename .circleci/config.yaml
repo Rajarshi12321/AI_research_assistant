@@ -1,0 +1,76 @@
+version: 2.1
+
+jobs:
+  integration:
+    docker:
+      - image: circleci/python:3.8
+
+    steps:
+      - checkout
+
+      - run:
+          name: Lint code
+          command: echo "Linting repository"
+
+      - run:
+          name: Run unit tests
+          command: echo "Running unit tests"
+
+  build-and-push-ecr-image:
+    docker:
+      - image: circleci/python:3.8
+
+    steps:
+      - checkout
+
+      - run:
+          name: Install Utilities
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y jq unzip
+
+      - run:
+          name: Configure AWS credentials
+          command: |
+            mkdir ~/.aws
+            echo -e "[default]\naws_access_key_id = $AWS_ACCESS_KEY_ID\naws_secret_access_key = $AWS_SECRET_ACCESS_KEY\nregion = $AWS_REGION" > ~/.aws/credentials
+
+      - run:
+          name: Login to Amazon ECR
+          command: aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+
+      - run:
+          name: Build, tag, and push image to Amazon ECR
+          command: |
+            docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY_NAME:latest .
+            docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY_NAME:latest
+
+  Continuous-Deployment:
+    docker:
+      - image: circleci/python:3.8
+
+    steps:
+      - checkout
+
+      - run:
+          name: Configure AWS credentials
+          command: |
+            mkdir ~/.aws
+            echo -e "[default]\naws_access_key_id = $AWS_ACCESS_KEY_ID\naws_secret_access_key = $AWS_SECRET_ACCESS_KEY\nregion = $AWS_REGION" > ~/.aws/credentials
+
+      - run:
+          name: Login to Amazon ECR
+          command: aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+
+      - run:
+          name: Pull latest images
+          command: docker pull $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY_NAME:latest
+
+      - run:
+          name: Run Docker Image to serve users
+          command: |
+            docker run -d -p 8080:8080 --name=housing -e 'AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID' -e 'AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY' -e 'AWS_REGION=$AWS_REGION' $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY_NAME:latest
+
+      - run:
+          name: Clean previous images and containers
+          command: docker system prune -f

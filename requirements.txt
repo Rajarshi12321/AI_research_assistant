@@ -6,3 +6,17 @@ PyPDF2
 chromadb
 faiss-cpu
 langchain_google_genai
+llama-index>=0.9.31 
+pinecone-client>=3.0.0 
+transformers
+pypdf
+python-dotenv
+regex
+llama-index-llms-gemini
+pypdf
+python-dotenv
+IPython
+llama-index-embeddings-gemini
+llama-index-vector-stores-pinecone
+
+-e .
