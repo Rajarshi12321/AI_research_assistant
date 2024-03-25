@@ -37,7 +37,7 @@ jobs:
 
       - run:
           name: Login to Amazon ECR
-          command: aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ECR_LOGIN_URI
+          command: aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ECR_LOGIN_URI/$ECR_REPOSITORY_NAME
 
       - run:
           name: Build, tag, and push image to Amazon ECR
@@ -60,7 +60,7 @@ jobs:
 
       - run:
           name: Login to Amazon ECR
-          command: aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ECR_LOGIN_URI
+          command: aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ECR_LOGIN_URI/$ECR_REPOSITORY_NAME
 
       - run:
           name: Pull latest images
