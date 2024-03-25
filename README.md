@@ -48,11 +48,18 @@ I have used Github Actions for implementing CI/CD pipeline and AWS ECR for conta
 ## Images 
 
 Main Page :
+![image](https://github.com/Rajarshi12321/AI_reasearch_assistant/assets/94736350/f878b503-507e-4bea-bc38-e539797d818e)
 
 
 Page when querying and uploading pdf :
 
+1. ![image](https://github.com/Rajarshi12321/AI_reasearch_assistant/assets/94736350/8c912caa-a1ee-495c-af18-a934a87d4451)
 
+
+
+2. ![image](https://github.com/Rajarshi12321/AI_reasearch_assistant/assets/94736350/b3766e1e-225d-4f10-8ec8-d9c4a696ece0)
+
+- ![image](https://github.com/Rajarshi12321/AI_reasearch_assistant/assets/94736350/ff266891-2910-4216-bddb-5bb381f5ceeb)
 
 
 ## Working with the code
