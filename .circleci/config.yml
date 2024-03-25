@@ -1,5 +1,10 @@
 version: 2.1
 
+
+orbs:
+  aws-ecr: circleci/aws-ecr@8.1.3
+
+
 jobs:
   integration:
     docker:
@@ -16,42 +21,57 @@ jobs:
           name: Run unit tests
           command: echo "Running unit tests"
 
-  build-and-push-ecr-image:
-    docker:
-      - image: circleci/python:3.9
 
-    steps:
-      - checkout
 
-      - run:
-          name: Install AWS CLI and Docker
-          command: |
-            sudo apt-get update && sudo apt-get install -y \
-              awscli \
-              docker.io
-            sudo ulimit -n 65536
-            sudo systemctl start docker
+  build_and_push_image:
+    jobs:
+      - aws-ecr/build-and-push-image:
+          context: aws-dev
+          create-repo: true
+          dockerfile: Dockerfile
+          path: .
+          repo: circleci-ecr-demo
+          tag: "$CIRCLE_SHA1"
+          build_args:
+            - PINECONE_API_KEY1=$PINECONE_API_KEY
+            - GEMINI_API_KEY1=$GEMINI_API_KEY
 
-      - run:
-          name: Configure AWS credentials
-          command: |
-            aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-            aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-            aws configure set region $AWS_REGION
+  # build-and-push-ecr-image:
+  #   docker:
+  #     - image: circleci/python:3.9
 
-      - run:
-          name: Login to Amazon ECR
-          command: aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ECR_LOGIN_URI/$ECR_REPOSITORY_NAME
+  #   steps:
+  #     - checkout
 
-      - run:
-          name: Build, tag, and push image to Amazon ECR
-          command: |
-            sudo systemctl status docker
+  #     - run:
+  #         name: Install AWS CLI and Docker
+  #         command: |
+  #           sudo apt-get update && sudo apt-get install -y \
+  #             awscli \
+  #             docker.io
+            
+  #           sudo systemctl start docker
 
-            sudo systemctl start docker
+  #     - run:
+  #         name: Configure AWS credentials
+  #         command: |
+  #           aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+  #           aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+  #           aws configure set region $AWS_REGION
 
-            docker build -t $AWS_ECR_LOGIN_URI/$ECR_REPOSITORY_NAME:latest .
-            docker push $AWS_ECR_LOGIN_URI/$ECR_REPOSITORY_NAME:latest
+  #     - run:
+  #         name: Login to Amazon ECR
+  #         command: aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ECR_LOGIN_URI/$ECR_REPOSITORY_NAME
+
+  #     - run:
+  #         name: Build, tag, and push image to Amazon ECR
+  #         command: |
+  #           sudo systemctl status docker
+
+  #           sudo systemctl start docker
+
+  #           docker build -t $AWS_ECR_LOGIN_URI/$ECR_REPOSITORY_NAME:latest .
+  #           docker push $AWS_ECR_LOGIN_URI/$ECR_REPOSITORY_NAME:latest
 
 
   # build-and-push-ecr-image:
