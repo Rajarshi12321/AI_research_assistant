@@ -16,25 +16,3 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger("research_assistantLogger")
-
-
-from research_assistant_app.constants import gemini_api_key, pinecone_api_key
-from llama_index.embeddings.gemini import GeminiEmbedding
-from llama_index.llms.gemini import Gemini
-import google.generativeai as genai
-from llama_index.core import Settings
-from llama_index.core.node_parser import SentenceSplitter
-
-genai.configure(api_key=gemini_api_key)
-
-model = Gemini(models="gemini-pro", api_key=gemini_api_key, temperature=0.3)
-
-gemini_embed_model = GeminiEmbedding(model_name="models/embedding-001")
-
-embed_model = gemini_embed_model
-
-Settings.llm = model
-Settings.embed_model = gemini_embed_model
-Settings.node_parser = SentenceSplitter(chunk_size=512, chunk_overlap=20)
-Settings.num_output = 512
-Settings.context_window = 3900
