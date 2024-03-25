@@ -25,19 +25,19 @@ jobs:
       - name: Run unit tests
         run: echo "Running unit tests"
 
-  create-envfile:
-    name: Creating env
-    runs-on: ubuntu-latest
+  # create-envfile:
+  #   name: Creating env
+  #   runs-on: ubuntu-latest
   
-    steps:
-    - name: Make envfile
-      uses: SpicyPizza/create-envfile@v2.0
-      with:
-        envkey_PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
-        envkey_GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        file_name: .env
-        fail_on_empty: false
-        sort_keys: false
+  #   steps:
+  #   - name: Make envfile
+  #     uses: SpicyPizza/create-envfile@v2.0
+  #     with:
+  #       envkey_PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
+  #       envkey_GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+  #       file_name: .env
+  #       fail_on_empty: false
+  #       sort_keys: false
 
   build-and-push-ecr-image:
     name: Continuous Delivery
@@ -68,11 +68,17 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_NAME }}
           IMAGE_TAG: latest
+          PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           # Build a docker container and
           # push it to ECR so that it can
           # be deployed to ECS.
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker build \
+            --build-arg PINECONE_API_KEY=$PINECONE_API_KEY \
+            --build-arg GEMINI_API_KEY=$GEMINI_API_KEY \
+            -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+            
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "IMAGE=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
 
