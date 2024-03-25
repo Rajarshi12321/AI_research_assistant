@@ -89,9 +89,9 @@ jobs:
 
          
          
-      # - name: Stop and remove container if running
-      #   run: |
-      #    docker ps -q --filter "name=ai-research-assistant" | grep -q . && docker stop ai-research-assistant && docker rm -fv ai-research-assistant
+      - name: Stop and remove container if running
+        run: |
+         docker ps -q --filter "name=ai-research-assistant" | grep -q . && docker stop ai-research-assistant && docker rm -fv ai-research-assistant
        
       - name: Run Docker Image to serve users
         run: |
