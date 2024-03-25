@@ -13,8 +13,9 @@ from research_assistant_app.constants import gemini_api_key, pinecone_api_key
 from research_assistant_app.components.data_ingestion import get_cleaned_dir_docs
 
 
-gemini_embed_model = GeminiEmbedding(model_name="models/embedding-001")
 genai.configure(api_key=gemini_api_key)  # configuring api to run the pipeline
+
+gemini_embed_model = GeminiEmbedding(model_name="models/embedding-001")
 
 embed_model = gemini_embed_model
 
