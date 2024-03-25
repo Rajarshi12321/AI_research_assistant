@@ -27,7 +27,7 @@
 
 ## About The Project
 
-Welcome to the AI Research Assistant repository. This AI Research Asssistant app is powered by Google Gemini. It helps in question answering about the provided research paper by uploading them through Streamlit, we save it in the `Data` folder and clean the document, index it by using Llamma-Index using Gemini Embedding Model. The created index is the upserted into Pinecone Vector DB.
+Welcome to the AI Research Assistant repository. This AI Research Assistant app is powered by Google Gemini. It helps in question answering about the provided research paper by uploading them through Streamlit, we save it in the `Data` folder and clean the document, index it by using Llamma-Index using Gemini Embedding Model. The created index is the upserted into Pinecone Vector DB.
 The query function in the data_querying module will retrieve the vectors from Pinecone Vector DB and use that for generating response by embedding a basic prompt in it.
 
 ### For MLOPs tools:
