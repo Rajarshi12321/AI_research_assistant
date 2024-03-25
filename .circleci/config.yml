@@ -116,7 +116,7 @@ jobs:
       - run:
           name: Run Docker Image to serve users
           command: |
-            docker run -d -p 8080:8080 --name=housing -e 'AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID' -e 'AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY' -e 'AWS_REGION=$AWS_REGION' $AWS_ECR_LOGIN_URI/$ECR_REPOSITORY_NAME:latest
+            docker run -d -p 8501:8501 --name=housing -e 'AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID' -e 'AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY' -e 'AWS_REGION=$AWS_REGION' $AWS_ECR_LOGIN_URI/$ECR_REPOSITORY_NAME:latest
 
       - run:
           name: Clean previous images and containers
