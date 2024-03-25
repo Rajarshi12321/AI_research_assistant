@@ -37,13 +37,13 @@ jobs:
 
       - run:
           name: Login to Amazon ECR
-          command: aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+          command: aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ECR_LOGIN_URI
 
       - run:
           name: Build, tag, and push image to Amazon ECR
           command: |
-            docker build -t $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY_NAME:latest .
-            docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY_NAME:latest
+            docker build -t $AWS_ECR_LOGIN_URI/$ECR_REPOSITORY_NAME:latest .
+            docker push $AWS_ECR_LOGIN_URI/$ECR_REPOSITORY_NAME:latest
 
   Continuous-Deployment:
     docker:
@@ -60,16 +60,16 @@ jobs:
 
       - run:
           name: Login to Amazon ECR
-          command: aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+          command: aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ECR_LOGIN_URI
 
       - run:
           name: Pull latest images
-          command: docker pull $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY_NAME:latest
+          command: docker pull $AWS_ECR_LOGIN_URI/$ECR_REPOSITORY_NAME:latest
 
       - run:
           name: Run Docker Image to serve users
           command: |
-            docker run -d -p 8080:8080 --name=housing -e 'AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID' -e 'AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY' -e 'AWS_REGION=$AWS_REGION' $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY_NAME:latest
+            docker run -d -p 8080:8080 --name=housing -e 'AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID' -e 'AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY' -e 'AWS_REGION=$AWS_REGION' $AWS_ECR_LOGIN_URI/$ECR_REPOSITORY_NAME:latest
 
       - run:
           name: Clean previous images and containers
