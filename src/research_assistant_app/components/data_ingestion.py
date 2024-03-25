@@ -1,6 +1,5 @@
 from llama_index.core import VectorStoreIndex, SimpleDirectoryReader
 import re
-from PyPDF2 import PdfReader
 
 
 def clean_up_text(content: str) -> str:

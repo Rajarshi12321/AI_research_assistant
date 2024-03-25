@@ -1,7 +1,5 @@
 import streamlit as st
-from PyPDF2 import PdfReader
 from pathlib import Path
-import time
 
 import os
 
@@ -23,14 +21,7 @@ os.getenv("GOOGLE_API_KEY")
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 
-from streamlit import session_state as ss
-
 st.set_page_config("Chat PDF")
-
-
-from streamlit import session_state as ss
-from streamlit_pdf_viewer import pdf_viewer
-
 
 st.header("Your research assistant here to help💁 (Powered by Gemini)")
 
