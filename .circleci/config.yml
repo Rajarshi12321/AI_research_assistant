@@ -18,31 +18,24 @@ jobs:
 
   build-and-push-ecr-image:
     docker:
-      - image: circleci/python:3.8
+      - image: circleci/python:3.9
 
     steps:
       - checkout
 
       - run:
-          name: Install Utilities
+          name: Install AWS CLI and Docker
           command: |
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip awscliv2.zip
-            sudo ./aws/install
-            sudo apt-get update
-            sudo apt-get install -y jq unzip
-            curl -fsSL https://get.docker.com -o get-docker.sh
+            sudo apt-get update && sudo apt-get install -y \
+              awscli \
+              docker.io
 
-            sudo sh get-docker.sh
-            sudo apt-get install -y dbus-user-session
-            sudo service --status-all 
-            sudo service docker start
       - run:
           name: Configure AWS credentials
           command: |
-            aws --version
-            mkdir ~/.aws
-            echo -e "[default]\naws_access_key_id = $AWS_ACCESS_KEY_ID\naws_secret_access_key = $AWS_SECRET_ACCESS_KEY\nregion = $AWS_REGION" > ~/.aws/credentials
+            aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+            aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+            aws configure set region $AWS_REGION
 
       - run:
           name: Login to Amazon ECR
@@ -53,6 +46,45 @@ jobs:
           command: |
             docker build -t $AWS_ECR_LOGIN_URI/$ECR_REPOSITORY_NAME:latest .
             docker push $AWS_ECR_LOGIN_URI/$ECR_REPOSITORY_NAME:latest
+
+
+  # build-and-push-ecr-image:
+  #   docker:
+  #     - image: circleci/python:3.8
+
+  #   steps:
+  #     - checkout
+
+  #     - run:
+  #         name: Install Utilities
+  #         command: |
+  #           curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+  #           unzip awscliv2.zip
+  #           sudo ./aws/install
+  #           sudo apt-get update
+  #           sudo apt-get install -y jq unzip
+  #           curl -fsSL https://get.docker.com -o get-docker.sh
+
+  #           sudo sh get-docker.sh
+  #           sudo apt-get install -y dbus-user-session
+  #           sudo service --status-all 
+  #           sudo service docker start
+  #     - run:
+  #         name: Configure AWS credentials
+  #         command: |
+  #           aws --version
+  #           mkdir ~/.aws
+  #           echo -e "[default]\naws_access_key_id = $AWS_ACCESS_KEY_ID\naws_secret_access_key = $AWS_SECRET_ACCESS_KEY\nregion = $AWS_REGION" > ~/.aws/credentials
+
+  #     - run:
+  #         name: Login to Amazon ECR
+  #         command: aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ECR_LOGIN_URI/$ECR_REPOSITORY_NAME
+
+  #     - run:
+  #         name: Build, tag, and push image to Amazon ECR
+  #         command: |
+  #           docker build -t $AWS_ECR_LOGIN_URI/$ECR_REPOSITORY_NAME:latest .
+  #           docker push $AWS_ECR_LOGIN_URI/$ECR_REPOSITORY_NAME:latest
 
   Continuous-Deployment:
     docker:
