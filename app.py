@@ -49,7 +49,7 @@ File = st.file_uploader(
     "Upload Your new PDF file to store in Pinecone DB", type=("pdf"), key="pdf"
 )
 
-if File:  # Save uploaded file to 'F:/tmp' folder.
+if File:  # Save uploaded file to 'Data/' folder.
     save_folder = "Data"
     save_path = Path(save_folder, File.name)
     with open(save_path, mode="wb") as w:

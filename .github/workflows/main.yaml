@@ -25,6 +25,20 @@ jobs:
       - name: Run unit tests
         run: echo "Running unit tests"
 
+  create-envfile:
+    name: Creating env
+    runs-on: ubuntu-latest
+  
+    steps:
+    - name: Make envfile
+      uses: SpicyPizza/create-envfile@v2.0
+      with:
+        envkey_PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
+        envkey_GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        file_name: .env
+        fail_on_empty: false
+        sort_keys: false
+
   build-and-push-ecr-image:
     name: Continuous Delivery
     needs: integration
