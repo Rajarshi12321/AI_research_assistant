@@ -18,7 +18,7 @@ jobs:
 
   build-and-push-ecr-image:
     docker:
-      - image: circleci/python:3.9
+      - image: ubuntu-2004:current
 
     steps:
       - checkout
