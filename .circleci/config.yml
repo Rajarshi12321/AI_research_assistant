@@ -34,6 +34,7 @@ jobs:
             curl -fsSL https://get.docker.com -o get-docker.sh
 
             sudo sh get-docker.sh
+            sudo apt-get install -y dbus-user-session
             sudo service --status-all 
             sudo service docker start
       - run:
