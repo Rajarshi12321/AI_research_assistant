@@ -1,8 +1,6 @@
 streamlit
 google-generativeai
 python-dotenv
-pathlib
-os
 langchain
 langchain_google_genai
 llama-index>=0.9.31 
