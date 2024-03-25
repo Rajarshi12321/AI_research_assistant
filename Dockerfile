@@ -1,9 +1,20 @@
-FROM python:3.8-slim-buster
+FROM python:3.10-slim
 
-RUN apt update -y && apt install awscli -y
 WORKDIR /app
 
-COPY . /app
-RUN pip install -r requirements.txt
+COPY requirements.txt ./requirements.txt
 
-CMD ["streamlit", "run", "app.py"]
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        ca-certificates \
+        netbase \
+        && rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install -r requirements.txt
+
+EXPOSE 8501
+
+COPY . .
+
+ENTRYPOINT ["streamlit", "run"]
+
+CMD ["app.py"]
