@@ -44,8 +44,8 @@ jobs:
       - run:
           name: Build, tag, and push image to Amazon ECR
           command: |
-            docker build -t $AWS_ECR_LOGIN_URI/$ECR_REPOSITORY_NAME:latest .
-            docker push $AWS_ECR_LOGIN_URI/$ECR_REPOSITORY_NAME:latest
+            sudo docker build -t $AWS_ECR_LOGIN_URI/$ECR_REPOSITORY_NAME:latest .
+            sudo docker push $AWS_ECR_LOGIN_URI/$ECR_REPOSITORY_NAME:latest
 
 
   # build-and-push-ecr-image:
