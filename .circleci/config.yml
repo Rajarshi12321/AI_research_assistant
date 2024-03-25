@@ -23,7 +23,7 @@ jobs:
 
 
 
-  build_and_push_image:
+  build-and-push-ecr-image:
     jobs:
       - aws-ecr/build-and-push-image:
           context: aws-dev
