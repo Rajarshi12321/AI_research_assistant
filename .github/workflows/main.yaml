@@ -75,8 +75,8 @@ jobs:
           # push it to ECR so that it can
           # be deployed to ECS.
           docker build \
-            --build-arg PINECONE_API_KEY=$PINECONE_API_KEY \
-            --build-arg GEMINI_API_KEY=$GEMINI_API_KEY \
+            --build-arg PINECONE_API_KEY1=$PINECONE_API_KEY \
+            --build-arg GEMINI_API_KEY1=$GEMINI_API_KEY \
             -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
             
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
