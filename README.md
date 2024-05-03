@@ -117,9 +117,11 @@ To run this project locally, please follow these steps:-
     PINECONE_API_KEY = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
     GEMINI_API_KEY = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
     ```
+    Get your gemini api for it. <br />
+    For pinecone create an index with name `ai-research-assistant` with 768 dimensions
 
 
-6. Run the Flask app: Execute the following code in your terminal.
+7. Run the Flask app: Execute the following code in your terminal.
    ```shell  
    streamlit run app.py 
    ```
